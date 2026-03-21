@@ -56,6 +56,7 @@ The goal is to compare the three stacks on the following criteria:
 ## Features
 - List the todos
 - Add a todo: description and optional due date (status defaults to "todo")
+- Toggle a todo's status (mark as done/undone by clicking the checkbox)
 - Delete a todo
 - Filter todos (all, todo, done)
 - Sort by description or due date
@@ -70,10 +71,10 @@ The goal is to compare the three stacks on the following criteria:
 ## UI
 - Centered single-column layout (max-width ~672px) with padding.
 - Add form: description input, optional due date picker, and "Add" button on one row.
-- Filter bar: "All", "Todo", "Done" buttons + sort buttons ("Description", "Due Date").
+- Filter/sort bar: Basecoat button groups for filter ("All", "Todo", "Done") and sort ("Description", "Due Date").
   Use Basecoat single compound class names (e.g. `btn-sm` for active, `btn-sm-outline` for inactive — never combine `btn` with `btn-outline`).
-- Each todo is a single compact row: checkbox (reflects done status), description, optional due date, and delete button.
-- Basecoat UI and HTMX loaded via CDN. No build step needed for frontend assets.
+- Each todo is a single compact row: clickable checkbox (toggles done/undone via HTMX), description, optional due date, and icon delete button.
+- Tailwind CSS, Basecoat UI, and HTMX loaded via CDN. No build step needed for frontend assets.
 
 ## TODO
 - OpenAPI schema generation (FastAPI has it built-in; evaluate options for Go and Bun)
