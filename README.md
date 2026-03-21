@@ -30,7 +30,8 @@ The goal is to compare the three stacks on the following criteria:
 
 ### Frontend (shared across all versions)
 - [HTMX](https://htmx.org/) (partial swaps for add/delete/filter/sort)
-- [Basecoat UI](https://basecoatui.com/) (Tailwind CSS component library)
+- [Tailwind CSS v4](https://tailwindcss.com/) (utility-first CSS framework, loaded via Play CDN)
+- [Basecoat UI](https://basecoatui.com/) (component library built on Tailwind CSS)
 - Client-side validation via HTML5 attributes
 
 ### Go (`go/`)
