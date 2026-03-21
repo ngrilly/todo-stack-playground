@@ -1,0 +1,177 @@
+package views
+
+import (
+	"fmt"
+	"go-todo-app/db"
+)
+
+// TodoPage renders the full page with form, filters, and todo list.
+templ TodoPage(todos []db.Todo, filter string, sort string, formErrors []string) {
+	@Layout("Todo App") {
+		<h1 class="text-2xl font-bold mb-6">Todo List</h1>
+		<div id="form-errors">
+			@FormErrors(formErrors)
+		</div>
+		@TodoForm()
+		<div id="todo-list">
+			@TodoList(todos, filter, sort)
+		</div>
+	}
+}
+
+// FormErrors renders validation error messages.
+templ FormErrors(errors []string) {
+	if len(errors) > 0 {
+		<div class="alert alert-destructive mb-4" role="alert">
+			<ul class="list-disc list-inside">
+				for _, err := range errors {
+					<li>{ err }</li>
+				}
+			</ul>
+		</div>
+	}
+}
+
+// TodoForm renders the form for adding a new todo.
+templ TodoForm() {
+	<form
+		hx-post="/todos"
+		hx-target="#todo-list"
+		hx-swap="innerHTML"
+		class="card p-4 mb-4"
+	>
+		<div class="flex items-end gap-3">
+			<div class="flex-1 flex flex-col gap-1.5">
+				<label class="label" for="description">Description</label>
+				<input
+					class="input w-full"
+					type="text"
+					id="description"
+					name="description"
+					placeholder="What needs to be done?"
+					required
+					minlength="1"
+					maxlength="500"
+				/>
+			</div>
+			<div class="flex flex-col gap-1.5">
+				<label class="label" for="due_date">Due Date</label>
+				<input
+					class="input"
+					type="date"
+					id="due_date"
+					name="due_date"
+				/>
+			</div>
+			<button class="btn" type="submit">Add</button>
+		</div>
+	</form>
+}
+
+// filterBtnClass returns the correct single Basecoat class for a filter/sort button.
+func filterBtnClass(active bool) string {
+	if active {
+		return "btn-sm"
+	}
+	return "btn-sm-outline"
+}
+
+// FilterBar renders filter and sort controls.
+templ FilterBar(currentFilter string, currentSort string) {
+	<div class="flex flex-wrap items-center gap-4 mb-4">
+		<span class="text-sm font-medium text-muted-foreground">Filter:</span>
+		<div role="group" class="button-group">
+			<button
+				class={ filterBtnClass(currentFilter == "") }
+				hx-get={ fmt.Sprintf("/?filter=&sort=%s", currentSort) }
+				hx-target="#todo-list"
+				hx-swap="innerHTML"
+			>
+				All
+			</button>
+			<button
+				class={ filterBtnClass(currentFilter == "todo") }
+				hx-get={ fmt.Sprintf("/?filter=todo&sort=%s", currentSort) }
+				hx-target="#todo-list"
+				hx-swap="innerHTML"
+			>
+				Todo
+			</button>
+			<button
+				class={ filterBtnClass(currentFilter == "done") }
+				hx-get={ fmt.Sprintf("/?filter=done&sort=%s", currentSort) }
+				hx-target="#todo-list"
+				hx-swap="innerHTML"
+			>
+				Done
+			</button>
+		</div>
+		<span class="text-sm font-medium text-muted-foreground">Sort:</span>
+		<div role="group" class="button-group">
+			<button
+				class={ filterBtnClass(currentSort == "description") }
+				hx-get={ fmt.Sprintf("/?filter=%s&sort=description", currentFilter) }
+				hx-target="#todo-list"
+				hx-swap="innerHTML"
+			>
+				Description
+			</button>
+			<button
+				class={ filterBtnClass(currentSort == "due_date") }
+				hx-get={ fmt.Sprintf("/?filter=%s&sort=due_date", currentFilter) }
+				hx-target="#todo-list"
+				hx-swap="innerHTML"
+			>
+				Due Date
+			</button>
+		</div>
+	</div>
+}
+
+// TodoList renders the list of todos (used as HTMX partial).
+templ TodoList(todos []db.Todo, filter string, sort string) {
+	@FilterBar(filter, sort)
+	if len(todos) == 0 {
+		<p class="text-muted-foreground text-center py-8">No todos found.</p>
+	} else {
+		<div class="flex flex-col gap-1">
+			for _, todo := range todos {
+				@TodoItem(todo)
+			}
+		</div>
+	}
+}
+
+// TodoItem renders a single todo as one line: checkbox, description, due date, delete.
+templ TodoItem(todo db.Todo) {
+	<div
+		class="flex items-center gap-3 px-2 py-1.5 rounded-md hover:bg-muted/50"
+		id={ fmt.Sprintf("todo-%d", todo.ID) }
+	>
+		<input
+			type="checkbox"
+			class="checkbox"
+			checked?={ todo.Status == "done" }
+			hx-patch={ fmt.Sprintf("/todos/%d/toggle", todo.ID) }
+			hx-target={ fmt.Sprintf("#todo-%d", todo.ID) }
+			hx-swap="outerHTML"
+		/>
+		if todo.Status == "done" {
+			<span class="flex-1 min-w-0 truncate line-through text-muted-foreground">{ todo.Description }</span>
+		} else {
+			<span class="flex-1 min-w-0 truncate">{ todo.Description }</span>
+		}
+		if todo.DueDate.Valid {
+			<span class="text-sm text-muted-foreground whitespace-nowrap">{ todo.DueDate.String }</span>
+		}
+		<button
+			class="btn-sm-icon-destructive"
+			hx-delete={ fmt.Sprintf("/todos/%d", todo.ID) }
+			hx-target={ fmt.Sprintf("#todo-%d", todo.ID) }
+			hx-swap="outerHTML"
+			hx-confirm="Delete this todo?"
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+		</button>
+	</div>
+}
