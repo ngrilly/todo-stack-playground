@@ -69,6 +69,7 @@ The goal is to compare the three stacks on the following criteria:
 ## TODO
 - OpenAPI schema generation (FastAPI has it built-in; evaluate options for Go and Bun)
 - Database migrations (evaluate goose, atlas, or similar tools)
+- Live reload in development
 
 ## Alternatives we could try later
 
