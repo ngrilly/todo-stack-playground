@@ -1,0 +1,17 @@
+{
+  "name": "bun-todo-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "bun run src/index.tsx",
+    "typecheck": "bunx tsc --noEmit"
+  },
+  "dependencies": {
+    "@kitajs/html": "^4.2.13"
+  },
+  "devDependencies": {
+    "@kitajs/ts-html-plugin": "^4.1.1",
+    "@types/bun": "latest",
+    "typescript": "^5.8"
+  }
+}

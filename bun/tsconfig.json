@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "types": ["bun-types", "@kitajs/html/htmx.d.ts"],
+    "plugins": [{ "name": "@kitajs/ts-html-plugin" }],
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["src"]
+}
