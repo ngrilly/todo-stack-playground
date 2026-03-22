@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"database/sql"
-	"log"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,7 +18,7 @@ type TodoHandler struct {
 }
 
 // List handles GET / — renders the full page or an HTMX partial.
-func (h *TodoHandler) List(w http.ResponseWriter, r *http.Request) {
+func (h *TodoHandler) List(w http.ResponseWriter, r *http.Request) error {
 	filter := r.URL.Query().Get("filter")
 	sort := r.URL.Query().Get("sort")
 
@@ -37,9 +37,7 @@ func (h *TodoHandler) List(w http.ResponseWriter, r *http.Request) {
 		SortField: sort,
 	})
 	if err != nil {
-		log.Printf("error listing todos: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return fmt.Errorf("listing todos: %w", err)
 	}
 
 	// HTMX requests get just the list partial; normal requests get the full page.
@@ -48,13 +46,13 @@ func (h *TodoHandler) List(w http.ResponseWriter, r *http.Request) {
 	} else {
 		views.TodoPage(todos, filter, sort, nil).Render(r.Context(), w)
 	}
+	return nil
 }
 
 // Create handles POST /todos — adds a new todo and returns the updated list.
-func (h *TodoHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (h *TodoHandler) Create(w http.ResponseWriter, r *http.Request) error {
 	if err := r.ParseForm(); err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
-		return
+		return &HTTPError{Code: http.StatusBadRequest, Message: "Bad Request"}
 	}
 
 	description := strings.TrimSpace(r.FormValue("description"))
@@ -79,7 +77,7 @@ func (h *TodoHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("HX-Retarget", "#form-errors")
 		w.Header().Set("HX-Reswap", "innerHTML")
 		views.FormErrors(errors).Render(r.Context(), w)
-		return
+		return nil
 	}
 
 	// Build due_date as sql.NullString
@@ -94,59 +92,52 @@ func (h *TodoHandler) Create(w http.ResponseWriter, r *http.Request) {
 		DueDate:     dueDate,
 	})
 	if err != nil {
-		log.Printf("error creating todo: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return fmt.Errorf("creating todo: %w", err)
 	}
 
 	// Re-fetch and return the updated todo list.
 	todos, err := h.Queries.ListTodos(r.Context(), db.ListTodosParams{})
 	if err != nil {
-		log.Printf("error listing todos: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return fmt.Errorf("listing todos: %w", err)
 	}
 
 	// Clear any previous errors via OOB swap.
 	w.Header().Set("HX-Trigger", "clearErrors")
 	views.TodoList(todos, "", "").Render(r.Context(), w)
+	return nil
 }
 
 // Delete handles DELETE /todos/{id} — removes a todo.
-func (h *TodoHandler) Delete(w http.ResponseWriter, r *http.Request) {
+func (h *TodoHandler) Delete(w http.ResponseWriter, r *http.Request) error {
 	idStr := r.PathValue("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
-		http.Error(w, "Invalid todo ID", http.StatusBadRequest)
-		return
+		return &HTTPError{Code: http.StatusBadRequest, Message: "Invalid todo ID"}
 	}
 
 	if err := h.Queries.DeleteTodo(r.Context(), id); err != nil {
-		log.Printf("error deleting todo %d: %v", id, err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return fmt.Errorf("deleting todo %d: %w", id, err)
 	}
 
 	// Return empty body — HTMX outerHTML swap removes the element.
 	w.WriteHeader(http.StatusOK)
+	return nil
 }
 
 // Toggle handles PATCH /todos/{id}/toggle — toggles a todo's status.
-func (h *TodoHandler) Toggle(w http.ResponseWriter, r *http.Request) {
+func (h *TodoHandler) Toggle(w http.ResponseWriter, r *http.Request) error {
 	idStr := r.PathValue("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
-		http.Error(w, "Invalid todo ID", http.StatusBadRequest)
-		return
+		return &HTTPError{Code: http.StatusBadRequest, Message: "Invalid todo ID"}
 	}
 
 	todo, err := h.Queries.ToggleTodoStatus(r.Context(), id)
 	if err != nil {
-		log.Printf("error toggling todo %d: %v", id, err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return fmt.Errorf("toggling todo %d: %w", id, err)
 	}
 
 	// Return the updated todo item partial.
 	views.TodoItem(todo).Render(r.Context(), w)
+	return nil
 }

@@ -39,10 +39,10 @@ func main() {
 	h := &handlers.TodoHandler{Queries: queries}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /{$}", h.List)
-	mux.HandleFunc("POST /todos", h.Create)
-	mux.HandleFunc("PATCH /todos/{id}/toggle", h.Toggle)
-	mux.HandleFunc("DELETE /todos/{id}", h.Delete)
+	mux.Handle("GET /{$}", handlers.AppHandlerFunc(h.List))
+	mux.Handle("POST /todos", handlers.AppHandlerFunc(h.Create))
+	mux.Handle("PATCH /todos/{id}/toggle", handlers.AppHandlerFunc(h.Toggle))
+	mux.Handle("DELETE /todos/{id}", handlers.AppHandlerFunc(h.Delete))
 
 	log.Println("Server listening on http://localhost:8080")
 	if err := http.ListenAndServe(":8080", mux); err != nil {
