@@ -2,7 +2,9 @@ Go:
 - Try using the @ syntax in sqlc
 - SQLite seems to not support arguments in the order by?
 - No go:generate comment in the sqlc and templ files?
-- Zed can't load the workspace due to the format of the go version in go.mod
+
+Bun:
+- Try ElysiaJS or Hono
 
 Frontend:
 - Clarify that Tailwind is part of the frontend stack? But that means we need JS in the toolchain?
