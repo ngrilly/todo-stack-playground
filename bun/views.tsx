@@ -1,5 +1,27 @@
-import type { Todo } from "../db/types";
-import { Layout } from "./layout";
+import type { Children } from "@kitajs/html";
+import type { Todo } from "./queries";
+
+function Layout({ title, children }: { title: string; children: Children }) {
+  return (
+    <>
+      {"<!DOCTYPE html>"}
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>{title}</title>
+          <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/basecoat.cdn.min.css" />
+          <script src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/js/all.min.js" defer></script>
+          <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+        </head>
+        <body>
+          <main class="max-w-2xl mx-auto px-4 py-8">{children}</main>
+        </body>
+      </html>
+    </>
+  );
+}
 
 function filterBtnClass(active: boolean): string {
   return active ? "btn-sm" : "btn-sm-outline";
@@ -43,7 +65,7 @@ export function FormErrors({ errors }: { errors: string[] }) {
   );
 }
 
-export function TodoForm() {
+function TodoForm() {
   return (
     <form hx-post="/todos" hx-target="#todo-list" hx-swap="innerHTML" class="card p-4 mb-4">
       <div class="flex items-end gap-3">
@@ -76,7 +98,7 @@ export function TodoForm() {
   );
 }
 
-export function FilterBar({ currentFilter, currentSort }: { currentFilter: string; currentSort: string }) {
+function FilterBar({ currentFilter, currentSort }: { currentFilter: string; currentSort: string }) {
   return (
     <div class="flex flex-wrap items-center gap-4 mb-4">
       <span class="text-sm font-medium text-muted-foreground">Filter:</span>

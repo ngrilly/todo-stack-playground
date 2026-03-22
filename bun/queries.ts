@@ -1,26 +1,17 @@
 import { Database } from "bun:sqlite";
-import type { Todo } from "./types";
 
-export interface ListTodosParams {
-  byStatus: boolean;
-  status: string;
-  sortField: string;
-}
-
-export interface CreateTodoParams {
+export interface Todo {
+  id: number;
   description: string;
-  status: string;
-  dueDate: string | null;
+  status: "todo" | "done";
+  due_date: string | null;
+  created_at: string;
 }
 
 export class Queries {
-  private db: Database;
+  constructor(private db: Database) {}
 
-  constructor(db: Database) {
-    this.db = db;
-  }
-
-  listTodos(params: ListTodosParams): Todo[] {
+  listTodos(byStatus: boolean, status: string, sortField: string): Todo[] {
     return this.db
       .query<Todo, [boolean, string, string]>(
         `SELECT * FROM todos
@@ -34,17 +25,17 @@ export class Queries {
              ELSE created_at
            END ASC`
       )
-      .all(params.byStatus, params.status, params.sortField);
+      .all(byStatus, status, sortField);
   }
 
-  createTodo(params: CreateTodoParams): Todo {
+  createTodo(description: string, status: string, dueDate: string | null): Todo {
     return this.db
       .query<Todo, [string, string, string | null]>(
         `INSERT INTO todos (description, status, due_date)
          VALUES (?1, ?2, ?3)
          RETURNING *`
       )
-      .get(params.description, params.status, params.dueDate)!;
+      .get(description, status, dueDate)!;
   }
 
   deleteTodo(id: number): void {
