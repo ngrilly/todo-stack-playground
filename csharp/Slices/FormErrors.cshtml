@@ -1,0 +1,13 @@
+@inherits RazorSlice<FormErrorsModel>
+
+@if (Model.Errors.Count > 0)
+{
+    <div class="alert alert-destructive mb-4" role="alert">
+        <ul class="list-disc list-inside">
+            @foreach (var err in Model.Errors)
+            {
+                <li>@err</li>
+            }
+        </ul>
+    </div>
+}

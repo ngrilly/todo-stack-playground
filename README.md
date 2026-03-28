@@ -1,6 +1,6 @@
-# Comparison of Go, Bun, and Python
+# Comparison of Go, Bun, Python, and C#
 
-Develop a basic todo list web app to compare Go, Bun, and Python.
+Develop a basic todo list web app to compare Go, Bun, Python, and C#.
 
 Each version of the app should live in a dedicated subfolder.
 
@@ -53,6 +53,11 @@ The goal is to compare the three stacks on the following criteria:
 - [htpy](https://htpy.dev/) (type-safe HTML generation in pure Python)
 - [aiosqlite](https://github.com/omnilib/aiosqlite) (async SQLite) + raw SQL + dataclasses
 
+### C# (`csharp/`)
+- ASP.NET Core Minimal APIs (.NET 10)
+- [Razor Slices](https://github.com/DamianEdwards/RazorSlices) (typed HTML templates for minimal APIs)
+- [Microsoft.Data.Sqlite](https://learn.microsoft.com/dotnet/standard/data/sqlite/) (raw SQL)
+
 ## Features
 - List the todos
 - Add a todo: description and optional due date (status defaults to "todo")
@@ -77,7 +82,7 @@ The goal is to compare the three stacks on the following criteria:
 - Tailwind CSS, Basecoat UI, and HTMX loaded via CDN. No build step needed for frontend assets.
 
 ## TODO
-- OpenAPI schema generation (FastAPI has it built-in; evaluate options for Go and Bun)
+- OpenAPI schema generation (FastAPI has it built-in; evaluate options for Go, Bun, and C#)
 - Database migrations (evaluate goose, atlas, or similar tools)
 - Live reload in development
 

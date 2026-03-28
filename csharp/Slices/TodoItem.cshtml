@@ -1,0 +1,47 @@
+@inherits RazorSlice<TodoItemModel>
+
+<div class="flex items-center gap-3 px-2 py-1.5 rounded-md hover:bg-muted/50" id="todo-@Model.Todo.Id">
+    <input
+        type="checkbox"
+        class="checkbox"
+        checked="@(Model.Todo.Status == "done" ? "checked" : null)"
+        hx-patch="/todos/@Model.Todo.Id/toggle"
+        hx-target="#todo-@Model.Todo.Id"
+        hx-swap="outerHTML" />
+
+    @if (Model.Todo.Status == "done")
+    {
+        <span class="flex-1 min-w-0 truncate line-through text-muted-foreground">@Model.Todo.Description</span>
+    }
+    else
+    {
+        <span class="flex-1 min-w-0 truncate">@Model.Todo.Description</span>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.Todo.DueDate))
+    {
+        <span class="text-sm text-muted-foreground whitespace-nowrap">@Model.Todo.DueDate</span>
+    }
+
+    <button
+        class="btn-sm-icon-destructive"
+        hx-delete="/todos/@Model.Todo.Id"
+        hx-target="#todo-@Model.Todo.Id"
+        hx-swap="outerHTML"
+        hx-confirm="Delete this todo?">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+    </button>
+</div>

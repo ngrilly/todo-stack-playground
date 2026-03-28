@@ -1,0 +1,57 @@
+@inherits RazorSlice<TodoPageModel>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <script src="https://cdn.jsdelivr.net/npm/@@tailwindcss/browser@4"></script>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/basecoat.cdn.min.css" />
+    <script
+        src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/js/all.min.js"
+        defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+</head>
+<body>
+    <main class="max-w-2xl mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-6">Todo List</h1>
+
+        <div id="form-errors">
+            @(await RenderPartialAsync<FormErrors, FormErrorsModel>(new FormErrorsModel(Model.FormErrors)))
+        </div>
+
+        <form
+            hx-post="/todos"
+            hx-target="#todo-list"
+            hx-swap="innerHTML"
+            class="card p-4 mb-4">
+            <div class="flex items-end gap-3">
+                <div class="flex-1 flex flex-col gap-1.5">
+                    <label class="label" for="description">Description</label>
+                    <input
+                        class="input w-full"
+                        type="text"
+                        id="description"
+                        name="description"
+                        placeholder="What needs to be done?"
+                        required
+                        minlength="1"
+                        maxlength="500" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="label" for="due_date">Due Date</label>
+                    <input class="input" type="date" id="due_date" name="due_date" />
+                </div>
+                <button class="btn" type="submit">Add</button>
+            </div>
+        </form>
+
+        <div id="todo-list">
+            @(await RenderPartialAsync<TodoList, TodoListModel>(new TodoListModel(Model.Todos, Model.Filter, Model.Sort)))
+        </div>
+    </main>
+</body>
+</html>
