@@ -1,6 +1,6 @@
 namespace CSharpTodoApp;
 
-public sealed record Todo(
+public record Todo(
     long Id,
     string Description,
     string Status,
@@ -8,19 +8,19 @@ public sealed record Todo(
     string CreatedAt
 );
 
-public sealed record TodoPageModel(
+public record TodoPageModel(
     IReadOnlyList<Todo> Todos,
     string Filter,
     string Sort,
     IReadOnlyList<string> FormErrors
 );
 
-public sealed record TodoListModel(
+public record TodoListModel(
     IReadOnlyList<Todo> Todos,
     string Filter,
     string Sort
 );
 
-public sealed record TodoItemModel(Todo Todo);
+public record TodoItemModel(Todo Todo);
 
-public sealed record FormErrorsModel(IReadOnlyList<string> Errors);
+public record FormErrorsModel(IReadOnlyList<string> Errors);

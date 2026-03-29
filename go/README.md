@@ -38,6 +38,12 @@ The server starts at http://localhost:8080. The SQLite database (`data/todos.db`
 go vet ./...
 ```
 
+## Test
+
+```bash
+go test ./...
+```
+
 ## Project Structure
 
 ```

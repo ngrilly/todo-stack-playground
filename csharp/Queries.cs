@@ -2,7 +2,7 @@ using Microsoft.Data.Sqlite;
 
 namespace CSharpTodoApp;
 
-public sealed class Queries(string connectionString)
+public class Queries(string connectionString)
 {
     public async Task<IReadOnlyList<Todo>> ListTodosAsync(bool byStatus, string status, string sortField)
     {

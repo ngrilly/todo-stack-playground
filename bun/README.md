@@ -33,6 +33,12 @@ The server starts at http://localhost:8080. The SQLite database (`data/todos.db`
 bun run typecheck
 ```
 
+## Test
+
+```bash
+bun test
+```
+
 ## Project Structure
 
 ```

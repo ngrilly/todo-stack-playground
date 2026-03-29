@@ -14,3 +14,9 @@ uv run fastapi dev main.py
 uv run ruff check
 uv run ty check
 ```
+
+## Test
+
+```sh
+uv run python -m unittest
+```
