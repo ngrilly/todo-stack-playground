@@ -1,5 +1,5 @@
 bin/
 obj/
-data/*.db
+data/
 tests/bin/
 tests/obj/
