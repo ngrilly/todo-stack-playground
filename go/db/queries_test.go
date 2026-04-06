@@ -56,35 +56,20 @@ func TestCreateTodo(t *testing.T) {
 
 func TestListTodosFilterAndSort(t *testing.T) {
 	q := newTestQueries(t)
+	ctx := context.Background()
 
-	_, err := q.CreateTodo(context.Background(), CreateTodoParams{
-		Description: "zebra",
-		Status:      "done",
-		DueDate:     sql.NullString{},
-	})
-	if err != nil {
-		t.Fatalf("create done todo zebra: %v", err)
+	seedTodos := []CreateTodoParams{
+		{Description: "zebra", Status: "done", DueDate: sql.NullString{}},
+		{Description: "alpha", Status: "done", DueDate: sql.NullString{}},
+		{Description: "middle", Status: "todo", DueDate: sql.NullString{}},
+	}
+	for _, todo := range seedTodos {
+		if _, err := q.CreateTodo(ctx, todo); err != nil {
+			t.Fatalf("create todo %q (%s): %v", todo.Description, todo.Status, err)
+		}
 	}
 
-	_, err = q.CreateTodo(context.Background(), CreateTodoParams{
-		Description: "alpha",
-		Status:      "done",
-		DueDate:     sql.NullString{},
-	})
-	if err != nil {
-		t.Fatalf("create done todo alpha: %v", err)
-	}
-
-	_, err = q.CreateTodo(context.Background(), CreateTodoParams{
-		Description: "middle",
-		Status:      "todo",
-		DueDate:     sql.NullString{},
-	})
-	if err != nil {
-		t.Fatalf("create todo todo: %v", err)
-	}
-
-	todos, err := q.ListTodos(context.Background(), ListTodosParams{
+	todos, err := q.ListTodos(ctx, ListTodosParams{
 		ByStatus:  true,
 		Status:    "done",
 		SortField: "description",
