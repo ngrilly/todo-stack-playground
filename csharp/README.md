@@ -11,7 +11,7 @@ A basic todo list web app built with ASP.NET Core Minimal APIs, Razor Slices, HT
 
 ## Prerequisites
 
-- .NET 10 SDK
+- .NET 10 SDK (install with `brew install --cask dotnet-sdk`)
 
 ## Run
 
