@@ -39,7 +39,3 @@ class QueriesTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(todos), 2)
         self.assertEqual(todos[0].description, "alpha")
         self.assertEqual(todos[1].description, "zebra")
-
-
-if __name__ == "__main__":
-    unittest.main()
