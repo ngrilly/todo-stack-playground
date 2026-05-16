@@ -1,4 +1,4 @@
-namespace CSharpTodoApp;
+namespace TodoApp;
 
 public record Todo(
     long Id,

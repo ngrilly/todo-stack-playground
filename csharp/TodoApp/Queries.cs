@@ -1,6 +1,6 @@
 using Microsoft.Data.Sqlite;
 
-namespace CSharpTodoApp;
+namespace TodoApp;
 
 public class Queries(string connectionString)
 {

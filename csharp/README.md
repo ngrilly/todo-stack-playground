@@ -16,7 +16,7 @@ A basic todo list web app built with ASP.NET Core Minimal APIs, Razor Slices, HT
 ## Run
 
 ```bash
-dotnet run
+dotnet run --project TodoApp
 ```
 
 The server starts at http://localhost:8080. The SQLite database (`data/todos.db`) is auto-created on first run.
@@ -30,5 +30,5 @@ dotnet build
 ## Test
 
 ```bash
-dotnet test tests
+dotnet test
 ```

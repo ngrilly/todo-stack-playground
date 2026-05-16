@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
-using CSharpTodoApp;
+using TodoApp;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://localhost:8080");
@@ -55,12 +55,12 @@ app.MapGet("/", (Func<HttpContext, Task<IResult>>)(async context =>
 
     if (IsHtmxRequest(request))
     {
-        return Results.Extensions.RazorSlice<CSharpTodoApp.Slices.TodoList, TodoListModel>(
+        return Results.Extensions.RazorSlice<TodoApp.Slices.TodoList, TodoListModel>(
             new TodoListModel(todos, filter, sort)
         );
     }
 
-    return Results.Extensions.RazorSlice<CSharpTodoApp.Slices.TodoPage, TodoPageModel>(
+    return Results.Extensions.RazorSlice<TodoApp.Slices.TodoPage, TodoPageModel>(
         new TodoPageModel(todos, filter, sort, [])
     );
 }));
@@ -95,7 +95,7 @@ app.MapPost("/todos", (Func<HttpContext, Task<IResult>>)(async context =>
     {
         context.Response.Headers["HX-Retarget"] = "#form-errors";
         context.Response.Headers["HX-Reswap"] = "innerHTML";
-        return Results.Extensions.RazorSlice<CSharpTodoApp.Slices.FormErrors, FormErrorsModel>(
+        return Results.Extensions.RazorSlice<TodoApp.Slices.FormErrors, FormErrorsModel>(
             new FormErrorsModel(errors)
         );
     }
@@ -104,7 +104,7 @@ app.MapPost("/todos", (Func<HttpContext, Task<IResult>>)(async context =>
     var todos = await queries.ListTodosAsync(false, "", "");
 
     context.Response.Headers["HX-Trigger"] = "clearErrors";
-    return Results.Extensions.RazorSlice<CSharpTodoApp.Slices.TodoList, TodoListModel>(
+    return Results.Extensions.RazorSlice<TodoApp.Slices.TodoList, TodoListModel>(
         new TodoListModel(todos, "", "")
     );
 }));
@@ -114,7 +114,7 @@ app.MapPatch("/todos/{id:long}/toggle", async (long id, Queries queries) =>
     var todo = await queries.ToggleTodoStatusAsync(id);
     return todo is null
         ? Results.NotFound("Not Found")
-        : Results.Extensions.RazorSlice<CSharpTodoApp.Slices.TodoItem, TodoItemModel>(
+        : Results.Extensions.RazorSlice<TodoApp.Slices.TodoItem, TodoItemModel>(
             new TodoItemModel(todo)
         );
 });

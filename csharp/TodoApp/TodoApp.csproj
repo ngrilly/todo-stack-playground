@@ -4,9 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>CSharpTodoApp</AssemblyName>
-    <RootNamespace>CSharpTodoApp</RootNamespace>
-    <DefaultItemExcludes>$(DefaultItemExcludes);tests/**</DefaultItemExcludes>
+    <AssemblyName>TodoApp</AssemblyName>
+    <RootNamespace>TodoApp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

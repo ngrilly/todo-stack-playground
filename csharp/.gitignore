@@ -1,5 +1,3 @@
-bin/
-obj/
-data/
-tests/bin/
-tests/obj/
+**/bin/
+**/obj/
+**/data/

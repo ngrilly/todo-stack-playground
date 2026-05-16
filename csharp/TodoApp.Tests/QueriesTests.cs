@@ -1,13 +1,13 @@
 using System.Text;
-using CSharpTodoApp;
+using TodoApp;
 using Xunit;
 
-namespace CSharpTodoApp.Tests;
+namespace TodoApp.Tests;
 
 public class QueriesTests
 {
     private static readonly string SchemaPath = System.IO.Path.GetFullPath(
-        System.IO.Path.Combine(AppContext.BaseDirectory, "../../../../schema.sql")
+        System.IO.Path.Combine(AppContext.BaseDirectory, "../../../../TodoApp/schema.sql")
     );
 
     [Fact]
