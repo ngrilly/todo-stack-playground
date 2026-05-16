@@ -40,12 +40,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
 app = FastAPI(lifespan=lifespan)
 
 
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception) -> Response:
-    logger.exception("server error")
-    return Response("Internal Server Error", status_code=500)
-
-
 def _get_db(request: Request) -> aiosqlite.Connection:
     return request.app.state.db
 
