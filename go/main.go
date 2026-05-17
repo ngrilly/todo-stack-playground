@@ -84,11 +84,10 @@ func (h *TodoHandler) List(w http.ResponseWriter, r *http.Request) error {
 
 	// HTMX requests get just the list partial; normal requests get the full page.
 	if r.Header.Get("HX-Request") == "true" {
-		views.TodoList(todos, filter, sort).Render(r.Context(), w)
+		return views.TodoList(todos, filter, sort).Render(r.Context(), w)
 	} else {
-		views.TodoPage(todos, filter, sort, nil).Render(r.Context(), w)
+		return views.TodoPage(todos, filter, sort, nil).Render(r.Context(), w)
 	}
-	return nil
 }
 
 // Create handles POST /todos — adds a new todo and returns the updated list.
@@ -118,8 +117,7 @@ func (h *TodoHandler) Create(w http.ResponseWriter, r *http.Request) error {
 		// Return error partial — swap into the form-errors div.
 		w.Header().Set("HX-Retarget", "#form-errors")
 		w.Header().Set("HX-Reswap", "innerHTML")
-		views.FormErrors(errors).Render(r.Context(), w)
-		return nil
+		return views.FormErrors(errors).Render(r.Context(), w)
 	}
 
 	// Build due_date as sql.NullString
@@ -145,8 +143,7 @@ func (h *TodoHandler) Create(w http.ResponseWriter, r *http.Request) error {
 
 	// Clear any previous errors via OOB swap.
 	w.Header().Set("HX-Trigger", "clearErrors")
-	views.TodoList(todos, "", "").Render(r.Context(), w)
-	return nil
+	return views.TodoList(todos, "", "").Render(r.Context(), w)
 }
 
 // Delete handles DELETE /todos/{id} — removes a todo.
@@ -180,6 +177,5 @@ func (h *TodoHandler) Toggle(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	// Return the updated todo item partial.
-	views.TodoItem(todo).Render(r.Context(), w)
-	return nil
+	return views.TodoItem(todo).Render(r.Context(), w)
 }
