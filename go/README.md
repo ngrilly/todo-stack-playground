@@ -48,7 +48,8 @@ go test ./...
 
 ```
 go/
-├── main.go              # Entrypoint: DB setup, router, server
+├── main.go              # Entrypoint: DB setup, router, server, and HTTP handlers
+├── httputils.go         # AppHandlerFunc error adapter
 ├── sqlc.yaml            # sqlc configuration
 ├── data/                # SQLite database (auto-created, gitignored)
 ├── db/
@@ -56,9 +57,7 @@ go/
 │   ├── query.sql        # sqlc-annotated SQL queries
 │   ├── db.go            # Generated: DBTX interface, Queries struct
 │   ├── models.go        # Generated: Todo struct
-│   └── query.sql.go     # Generated: ListTodos, CreateTodo, DeleteTodo, ToggleTodoStatus
-├── handlers/
-│   └── todo.go          # HTTP handlers
+│   └── query.sql.go     # Generated: CRUD methods
 └── views/
     ├── layout.templ      # HTML layout (head, body, CDN links)
     ├── todo.templ        # Todo components (page, form, list, item)
