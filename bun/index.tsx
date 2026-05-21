@@ -17,7 +17,11 @@ db.run(ddl);
 
 const queries = new Queries(db);
 
-function html(body: JSX.Element, status = 200, headers: Record<string, string> = {}): Response {
+function html(
+  body: JSX.Element,
+  status = 200,
+  headers: Record<string, string> = {},
+): Response {
   return new Response(body as string, {
     status,
     headers: { "Content-Type": "text/html; charset=utf-8", ...headers },
@@ -27,12 +31,13 @@ function html(body: JSX.Element, status = 200, headers: Record<string, string> =
 /** GET / — renders the full page or an HTMX partial. */
 function list(req: Request): Response {
   const url = new URL(req.url);
-  let filter = url.searchParams.get("filter") ?? "";
-  let sort = url.searchParams.get("sort") ?? "";
 
+  let filter = url.searchParams.get("filter") ?? "";
   if (filter !== "" && filter !== "todo" && filter !== "done") {
     filter = "";
   }
+
+  let sort = url.searchParams.get("sort") ?? "";
   if (sort !== "" && sort !== "description" && sort !== "due_date") {
     sort = "";
   }
@@ -48,7 +53,8 @@ function list(req: Request): Response {
 /** POST /todos — adds a new todo and returns the updated list. */
 async function create(req: Request): Promise<Response> {
   const formData = await req.formData();
-  const description = (formData.get("description") as string | null)?.trim() ?? "";
+  const description =
+    (formData.get("description") as string | null)?.trim() ?? "";
   const dueDateStr = (formData.get("due_date") as string | null)?.trim() ?? "";
 
   const errors: string[] = [];

@@ -38,14 +38,14 @@ app.MapGet("/", (Func<HttpContext, Task<IResult>>)(async context =>
 {
     var request = context.Request;
     var queries = context.RequestServices.GetRequiredService<Queries>();
-    var filter = request.Query["filter"].ToString();
-    var sort = request.Query["sort"].ToString();
 
+    var filter = request.Query["filter"].ToString();
     if (filter is not ("" or "todo" or "done"))
     {
         filter = "";
     }
 
+    var sort = request.Query["sort"].ToString();
     if (sort is not ("" or "description" or "due_date"))
     {
         sort = "";

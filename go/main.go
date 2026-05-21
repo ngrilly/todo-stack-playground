@@ -61,14 +61,14 @@ type TodoHandler struct {
 
 // List handles GET / — renders the full page or an HTMX partial.
 func (h *TodoHandler) List(w http.ResponseWriter, r *http.Request) error {
-	filter := r.URL.Query().Get("filter")
-	sort := r.URL.Query().Get("sort")
+	params := r.URL.Query()
 
-	// Validate filter
+	filter := params.Get("filter")
 	if filter != "" && filter != "todo" && filter != "done" {
 		filter = ""
 	}
-	// Validate sort
+
+	sort := params.Get("sort")
 	if sort != "" && sort != "description" && sort != "due_date" {
 		sort = ""
 	}
